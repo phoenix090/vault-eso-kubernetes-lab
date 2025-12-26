@@ -1,0 +1,33 @@
+# =========================
+# Vault TLS / PKI material
+# =========================
+*.key
+*.pem
+*.crt
+*.csr
+*.srl
+
+# =========================
+# Vault tokens / JWTs
+# =========================
+*.jwt
+.vault-token
+
+# =========================
+# Vault runtime data
+# =========================
+vault/data/*
+vault/logs/*
+
+# =========================
+# Local overrides / env
+# =========================
+.env
+.env.*
+
+# =========================
+# OS / Editor files
+# =========================
+.DS_Store
+.idea/
+.vscode/
