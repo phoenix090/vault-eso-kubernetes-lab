@@ -16,6 +16,15 @@ The lab intentionally mirrors real-world constraints:
 
 ---
 
+## Contents
+
+- [Architecture Overview](#architecture-overview)
+- [Prerequisites](#prerequisites)
+- [Install Vault](#install-vault-with-docker-compose)
+- [Install ESO](#install-eso)
+- [Secret Sync and Rotation](#secret-rotation-end-to-end)
+- [Troubleshooting](#troubleshooting)
+
 ## Architecture Overview
 
 ### Mermaid Diagram
@@ -81,25 +90,8 @@ vault-eso-kubernetes-lab/
 - Vault 1.21.1+
 
 ## Install Vault with Docker Compose
-```bash
-cd vault
-docker compose up -d
-```
 
-### Verify Vault is running
-```bash
-docker ps
-```
-
-### Vault should be listening on:
-```
-https://localhost:8200
-```
-
-### From inside Kubernetes, Vault is accessed via:
-```
-https://host.docker.internal:8200
-```
+➡️ [`Vault documentation`](vault/README.md)
 
 ## Installing External Secrets Operator (ESO)
 
@@ -144,40 +136,7 @@ see the detailed troubleshooting guide:
 Detailed Vault setup (TLS generation, auth configuration, roles and policies)
 is documented in the `vault/` directory.
 
-### Vault Policy (KV v2 aware)
-````
-path "kv/data/app/*" {
-  capabilities = ["read"]
-}
-
-
-path "kv/metadata/app/*" {
-  capabilities = ["read", "list"]
-}
-````
-
-#### Note:
-- KV v2 policies must reference kv/data/..., not kv/app/....
-
-## Kubernetes Auth – Vault ≥ 1.21 Requirement
-
-Projected ServiceAccount tokens include an audience:
-```
-"aud": ["https://kubernetes.default.svc.cluster.local"]
-```
-
-
-**Vault 1.21+ enforces exact audience matching.**
-
-The Kubernetes auth role must include:
-````
-audience = "https://kubernetes.default.svc.cluster.local"
-````
-
-Otherwise authentication fails with:
-```
-403 invalid audience (aud) claim
-```
+**Note:** Vault 1.21+ requires audience matching for Kubernetes auth tokens. If you see 403 errors, see the troubleshooting guide.
 
 ## External Secrets Operator Configuration
 ```yaml
